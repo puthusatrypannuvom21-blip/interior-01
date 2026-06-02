@@ -312,6 +312,10 @@
 </div>
 
 <script>
+  // ── GOOGLE SHEET URL ──────────────────────────────────────────────────────
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbxe7q1bA_iy6Fd83wgVMCUmt9ySxk8MhW6i2k0NY2_vzXOrhjNtlV1FVP67STMV9pFKcw/exec";
+  // ───────────────────────────────────────────────────────────────────────────
+
   const TOTAL = 8;
   let cur = 1;
   const budgetLabels = ['Under ₹5L','₹5–10L','₹10–15L','₹15–20L','₹20–30L','₹30–40L','₹40–50L','₹50–75L','₹75L–1Cr','₹1 Cr+'];
@@ -338,10 +342,6 @@
     renderProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  // ── PASTE YOUR WEB APP URL BELOW ──────────────────────────────────────────
-  const SHEET_URL = "https://script.google.com/macros/s/AKfycbxKeFt59plMuGaHcBRVzEa9h0z2bUvB1Nq14yb0mk4P_Mhg0a2LRgF2kbgDQUrofHN8wA/exec";
-  // ──────────────────────────────────────────────────────────────────────────
 
   async function submitToGoogleSheet() {
     try {
@@ -377,20 +377,10 @@
           notes:         document.getElementById('notes').value
         })
       });
-    } catch (err) {
-      console.error('Sheet error:', err);
-    }
+    } catch (err) { console.error('Sheet error:', err); }
   }
 
-  function nextStep() {
-    collectStep(cur);
-    if (cur === TOTAL) {
-      showSummary();
-      submitToGoogleSheet(); // ← sends data to Google Sheet on final submit
-    }
-    cur++;
-    showStep(cur);
-  }
+  function nextStep() { collectStep(cur); if (cur === TOTAL) { showSummary(); submitToGoogleSheet(); } cur++; showStep(cur); }
   function prevStep() { if (cur > 1) { cur--; showStep(cur); } }
 
   function collectStep(n) {
