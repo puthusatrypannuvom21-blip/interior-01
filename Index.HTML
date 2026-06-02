@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interior Design — Client Requirement Form</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7f5f2; color: #1a1a1a; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+    .card { background: #fff; border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 640px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
+    .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: #1D9E75; }
+    .brand-name { font-size: 15px; font-weight: 500; color: #1D9E75; letter-spacing: 0.04em; }
+    .progress-bar { display: flex; gap: 6px; margin-bottom: 2rem; }
+    .progress-step { flex: 1; height: 4px; border-radius: 2px; background: #e5e5e5; transition: background 0.3s; }
+    .progress-step.done { background: #1D9E75; }
+    .progress-step.active { background: #5DCAA5; }
+    .step { display: none; }
+    .step.active { display: block; }
+    .step-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .step-title { font-size: 22px; font-weight: 500; color: #1a1a1a; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.25rem; }
+    .field label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 6px; }
+    .field input, .field select, .field textarea { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; color: #1a1a1a; background: #fff; outline: none; transition: border 0.15s; font-family: inherit; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #1D9E75; }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 6px 14px; border-radius: 20px; border: 1px solid #ddd; font-size: 13px; color: #555; cursor: pointer; transition: all 0.15s; user-select: none; background: #fff; }
+    .chip:hover { border-color: #1D9E75; color: #0F6E56; }
+    .chip.selected { background: #E1F5EE; border-color: #1D9E75; color: #0F6E56; font-weight: 500; }
+    .budget-display { font-size: 22px; font-weight: 500; color: #1D9E75; margin: 8px 0 4px; }
+    .budget-sub { font-size: 12px; color: #888; }
+    input[type=range] { width: 100%; accent-color: #1D9E75; margin-top: 12px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
+    .btn-back { background: none; border: 1px solid #ddd; color: #555; padding: 10px 22px; border-radius: 8px; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .btn-back:hover { background: #f5f5f5; }
+    .btn-next { background: #1D9E75; border: none; color: #fff; padding: 10px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .btn-next:hover { background: #0F6E56; }
+    .btn-wa { background: #25D366; border: none; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .btn-wa:hover { background: #1ebe5d; }
+    .step-counter { font-size: 13px; color: #888; }
+    .style-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .style-card { border: 1px solid #ddd; border-radius: 8px; padding: 14px 12px; cursor: pointer; text-align: center; transition: all 0.15s; background: #fff; }
+    .style-card:hover { border-color: #1D9E75; }
+    .style-card.selected { border-color: #1D9E75; background: #E1F5EE; }
+    .style-card .icon { font-size: 22px; margin-bottom: 6px; color: #888; }
+    .style-card.selected .icon { color: #0F6E56; }
+    .style-card .name { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+    .style-card .desc { font-size: 11px; color: #888; margin-top: 2px; }
+    .success-wrap { text-align: center; padding: 1rem 0; }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #f0f0f0; }
+    .summary-label { color: #888; }
+    .summary-val { color: #1a1a1a; font-weight: 500; text-align: right; max-width: 60%; }
+    .divider { border: none; border-top: 1px solid #f0f0f0; margin: 1.25rem 0; }
+    @media (max-width: 500px) {
+      .row { grid-template-columns: 1fr; }
+      .style-cards { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <span class="brand-name">Interior Design Studio</span>
+  </div>
+
+  <div class="progress-bar" id="progress"></div>
+
+  <!-- Step 1 -->
+  <div class="step active" id="step-1">
+    <p class="step-label">Step 1 of 8</p>
+    <h1 class="step-title">Contact information</h1>
+    <div class="row">
+      <div class="field"><label>First name</label><input type="text" id="fname" placeholder="Ananya"></div>
+      <div class="field"><label>Last name</label><input type="text" id="lname" placeholder="Sharma"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Phone number</label><input type="tel" id="phone" placeholder="+91 98765 43210"></div>
+      <div class="field"><label>Email address</label><input type="email" id="email" placeholder="ananya@example.com"></div>
+    </div>
+    <div class="field"><label>City / location</label><input type="text" id="city" placeholder="Chennai, Tamil Nadu"></div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step" id="step-2">
+    <p class="step-label">Step 2 of 8</p>
+    <h2 class="step-title">Property details</h2>
+    <div class="field">
+      <label>Property type</label>
+      <div class="chips" id="prop-type">
+        <div class="chip" data-val="Apartment">Apartment</div>
+        <div class="chip" data-val="Villa / independent house">Villa / independent house</div>
+        <div class="chip" data-val="Penthouse">Penthouse</div>
+        <div class="chip" data-val="Commercial / office">Commercial / office</div>
+        <div class="chip" data-val="Showroom / retail">Showroom / retail</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Total area (sq ft)</label><input type="number" id="area" placeholder="1200"></div>
+      <div class="field">
+        <label>BHK / configuration</label>
+        <select id="bhk">
+          <option value="">Select</option>
+          <option>1 BHK</option><option>2 BHK</option><option>3 BHK</option>
+          <option>4 BHK</option><option>5+ BHK</option><option>Studio</option><option>Villa / duplex</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Project address / locality</label><input type="text" id="address" placeholder="Anna Nagar, Chennai"></div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step" id="step-3">
+    <p class="step-label">Step 3 of 8</p>
+    <h2 class="step-title">Rooms to design</h2>
+    <p style="font-size:13px;color:#888;margin-bottom:1rem;">Select all spaces you'd like to redesign.</p>
+    <div class="chips" id="rooms">
+      <div class="chip" data-val="Living room">Living room</div>
+      <div class="chip" data-val="Master bedroom">Master bedroom</div>
+      <div class="chip" data-val="Bedroom 2">Bedroom 2</div>
+      <div class="chip" data-val="Bedroom 3">Bedroom 3</div>
+      <div class="chip" data-val="Kitchen">Kitchen</div>
+      <div class="chip" data-val="Dining area">Dining area</div>
+      <div class="chip" data-val="Bathrooms">Bathrooms</div>
+      <div class="chip" data-val="Study / home office">Study / home office</div>
+      <div class="chip" data-val="Kids room">Kids room</div>
+      <div class="chip" data-val="Pooja room">Pooja room</div>
+      <div class="chip" data-val="Balcony / terrace">Balcony / terrace</div>
+      <div class="chip" data-val="Foyer / entrance">Foyer / entrance</div>
+      <div class="chip" data-val="Full home">Full home</div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step" id="step-4">
+    <p class="step-label">Step 4 of 8</p>
+    <h2 class="step-title">Design style preference</h2>
+    <div class="style-cards" id="styles">
+      <div class="style-card" data-val="Modern"><div class="icon"><i class="ti ti-layout-2"></i></div><div class="name">Modern</div><div class="desc">Clean lines, neutral tones</div></div>
+      <div class="style-card" data-val="Minimalist"><div class="icon"><i class="ti ti-minimize"></i></div><div class="name">Minimalist</div><div class="desc">Less is more</div></div>
+      <div class="style-card" data-val="Classic / traditional"><div class="icon"><i class="ti ti-building-arch"></i></div><div class="name">Classic / traditional</div><div class="desc">Timeless elegance</div></div>
+      <div class="style-card" data-val="Contemporary"><div class="icon"><i class="ti ti-artboard"></i></div><div class="name">Contemporary</div><div class="desc">Fresh &amp; current</div></div>
+      <div class="style-card" data-val="Bohemian"><div class="icon"><i class="ti ti-plant"></i></div><div class="name">Bohemian</div><div class="desc">Eclectic, warm textures</div></div>
+      <div class="style-card" data-val="Industrial"><div class="icon"><i class="ti ti-tools"></i></div><div class="name">Industrial</div><div class="desc">Raw, urban, edgy</div></div>
+      <div class="style-card" data-val="Scandinavian"><div class="icon"><i class="ti ti-snowflake"></i></div><div class="name">Scandinavian</div><div class="desc">Cosy, light, functional</div></div>
+      <div class="style-card" data-val="Luxury / opulent"><div class="icon"><i class="ti ti-diamond"></i></div><div class="name">Luxury / opulent</div><div class="desc">Grand &amp; ornate</div></div>
+      <div class="style-card" data-val="Not decided"><div class="icon"><i class="ti ti-help"></i></div><div class="name">Not decided</div><div class="desc">Need guidance</div></div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step" id="step-5">
+    <p class="step-label">Step 5 of 8</p>
+    <h2 class="step-title">Kitchen preferences</h2>
+    <div class="field">
+      <label>Kitchen layout</label>
+      <div class="chips" id="kitchen-layout">
+        <div class="chip" data-val="Straight / one-wall">Straight / one-wall</div>
+        <div class="chip" data-val="L-shape">L-shape</div>
+        <div class="chip" data-val="U-shape">U-shape</div>
+        <div class="chip" data-val="Parallel / galley">Parallel / galley</div>
+        <div class="chip" data-val="Island kitchen">Island kitchen</div>
+        <div class="chip" data-val="Open kitchen">Open kitchen</div>
+        <div class="chip" data-val="Not applicable">Not applicable</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Cabinet finish</label>
+      <div class="chips" id="cabinet-finish">
+        <div class="chip" data-val="Matte">Matte</div>
+        <div class="chip" data-val="Glossy / lacquer">Glossy / lacquer</div>
+        <div class="chip" data-val="Wood veneer">Wood veneer</div>
+        <div class="chip" data-val="Membrane">Membrane</div>
+        <div class="chip" data-val="Open shelves">Open shelves</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Countertop material</label>
+      <div class="chips" id="countertop">
+        <div class="chip" data-val="Granite">Granite</div>
+        <div class="chip" data-val="Engineered quartz">Engineered quartz</div>
+        <div class="chip" data-val="Marble">Marble</div>
+        <div class="chip" data-val="Stainless steel">Stainless steel</div>
+        <div class="chip" data-val="Tiles">Tiles</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Appliances to include</label>
+      <div class="chips" id="appliances">
+        <div class="chip" data-val="Chimney / hood">Chimney / hood</div>
+        <div class="chip" data-val="Hob / cooktop">Hob / cooktop</div>
+        <div class="chip" data-val="Microwave / oven">Microwave / oven</div>
+        <div class="chip" data-val="Dishwasher">Dishwasher</div>
+        <div class="chip" data-val="Refrigerator unit">Refrigerator unit</div>
+        <div class="chip" data-val="Washing machine space">Washing machine space</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step" id="step-6">
+    <p class="step-label">Step 6 of 8</p>
+    <h2 class="step-title">Budget range</h2>
+    <div class="field">
+      <label>Estimated total budget</label>
+      <div class="budget-display" id="budget-display">₹15 – 20 Lakhs</div>
+      <div class="budget-sub">Drag the slider to set your range</div>
+      <input type="range" id="budget-slider" min="1" max="10" step="1" value="4">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px;">
+        <span>Under ₹5L</span><span>₹1 Cr+</span>
+      </div>
+    </div>
+    <div class="field" style="margin-top:1.5rem;">
+      <label>Payment preference</label>
+      <div class="chips" id="payment">
+        <div class="chip" data-val="Milestone-based">Milestone-based</div>
+        <div class="chip" data-val="Monthly installments">Monthly installments</div>
+        <div class="chip" data-val="Lump sum">Lump sum</div>
+        <div class="chip" data-val="Flexible">Flexible</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 7 -->
+  <div class="step" id="step-7">
+    <p class="step-label">Step 7 of 8</p>
+    <h2 class="step-title">Project timeline</h2>
+    <div class="field">
+      <label>When do you want to start?</label>
+      <div class="chips" id="start-when">
+        <div class="chip" data-val="Immediately">Immediately</div>
+        <div class="chip" data-val="Within 1 month">Within 1 month</div>
+        <div class="chip" data-val="In 2–3 months">In 2–3 months</div>
+        <div class="chip" data-val="In 6 months">In 6 months</div>
+        <div class="chip" data-val="Just planning for now">Just planning for now</div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:1.25rem;">
+      <label>Expected project duration</label>
+      <div class="chips" id="duration">
+        <div class="chip" data-val="Under 1 month">Under 1 month</div>
+        <div class="chip" data-val="1–3 months">1–3 months</div>
+        <div class="chip" data-val="3–6 months">3–6 months</div>
+        <div class="chip" data-val="6–12 months">6–12 months</div>
+        <div class="chip" data-val="Over a year">Over a year</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:1.25rem;">
+      <div class="field"><label>Preferred start date</label><input type="date" id="start-date"></div>
+      <div class="field"><label>Move-in / deadline date</label><input type="date" id="end-date"></div>
+    </div>
+  </div>
+
+  <!-- Step 8 -->
+  <div class="step" id="step-8">
+    <p class="step-label">Step 8 of 8</p>
+    <h2 class="step-title">Additional details</h2>
+    <div class="field">
+      <label>Flooring preference</label>
+      <div class="chips" id="flooring">
+        <div class="chip" data-val="Vitrified tiles">Vitrified tiles</div>
+        <div class="chip" data-val="Wooden / laminate">Wooden / laminate</div>
+        <div class="chip" data-val="Marble / stone">Marble / stone</div>
+        <div class="chip" data-val="Epoxy / resin">Epoxy / resin</div>
+        <div class="chip" data-val="Carpet / rugs">Carpet / rugs</div>
+        <div class="chip" data-val="Not decided yet">Not decided yet</div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:1rem;">
+      <label>How did you hear about us?</label>
+      <select id="referral">
+        <option value="">Select</option>
+        <option>Instagram / social media</option>
+        <option>Google search</option>
+        <option>Friend / family referral</option>
+        <option>Previous client</option>
+        <option>Houzz / other platform</option>
+        <option>Builder / developer</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Inspiration references or special requests</label>
+      <textarea id="notes" placeholder="Share Pinterest links, describe your dream space, list any special requirements (accessibility, Vastu compliance, pet-friendly materials, etc.)…"></textarea>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="step" id="step-success">
+    <div class="success-wrap">
+      <div class="success-icon"><i class="ti ti-check" style="font-size:30px;color:#1D9E75;"></i></div>
+      <h2 style="font-size:22px;font-weight:500;margin-bottom:8px;">Thank you! We've received your details.</h2>
+      <p style="font-size:14px;color:#888;margin-bottom:1.5rem;">Our designer will reach out within 24 hours to schedule your consultation.</p>
+      <hr class="divider">
+      <div id="summary" style="text-align:left;margin-bottom:1.5rem;"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-wa" onclick="sendWhatsApp()"><i class="ti ti-brand-whatsapp"></i> Send summary on WhatsApp</button>
+        <button class="btn-back" onclick="resetForm()"><i class="ti ti-refresh"></i> Submit another</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav" id="nav-bar">
+    <button class="btn-back" id="btn-back" onclick="prevStep()" style="visibility:hidden"><i class="ti ti-arrow-left"></i> Back</button>
+    <span class="step-counter" id="step-counter">1 of 8</span>
+    <button class="btn-next" id="btn-next" onclick="nextStep()">Next <i class="ti ti-arrow-right"></i></button>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 8;
+  let cur = 1;
+  const budgetLabels = ['Under ₹5L','₹5–10L','₹10–15L','₹15–20L','₹20–30L','₹30–40L','₹40–50L','₹50–75L','₹75L–1Cr','₹1 Cr+'];
+  const data = {};
+
+  function renderProgress() {
+    const bar = document.getElementById('progress');
+    bar.innerHTML = '';
+    for (let i = 1; i <= TOTAL; i++) {
+      const d = document.createElement('div');
+      d.className = 'progress-step' + (i < cur ? ' done' : i === cur ? ' active' : '');
+      bar.appendChild(d);
+    }
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(n > TOTAL ? 'step-success' : 'step-' + n).classList.add('active');
+    const nav = document.getElementById('nav-bar');
+    nav.style.display = n > TOTAL ? 'none' : 'flex';
+    document.getElementById('btn-back').style.visibility = n > 1 ? 'visible' : 'hidden';
+    document.getElementById('btn-next').innerHTML = n === TOTAL ? '<i class="ti ti-send"></i> Submit' : 'Next <i class="ti ti-arrow-right"></i>';
+    document.getElementById('step-counter').textContent = Math.min(n, TOTAL) + ' of ' + TOTAL;
+    renderProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── PASTE YOUR WEB APP URL BELOW ──────────────────────────────────────────
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+  // ──────────────────────────────────────────────────────────────────────────
+
+  async function submitToGoogleSheet() {
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp:     new Date().toLocaleString('en-IN'),
+          firstName:     document.getElementById('fname').value,
+          lastName:      document.getElementById('lname').value,
+          phone:         document.getElementById('phone').value,
+          email:         document.getElementById('email').value,
+          city:          document.getElementById('city').value,
+          propertyType:  getChips('prop-type'),
+          area:          document.getElementById('area').value,
+          bhk:           document.getElementById('bhk').value,
+          address:       document.getElementById('address').value,
+          rooms:         getChips('rooms'),
+          style:         getChips('styles'),
+          kitchenLayout: getChips('kitchen-layout'),
+          cabinet:       getChips('cabinet-finish'),
+          countertop:    getChips('countertop'),
+          appliances:    getChips('appliances'),
+          budget:        data.budget,
+          payment:       getChips('payment'),
+          startWhen:     getChips('start-when'),
+          duration:      getChips('duration'),
+          startDate:     document.getElementById('start-date').value,
+          endDate:       document.getElementById('end-date').value,
+          flooring:      getChips('flooring'),
+          referral:      document.getElementById('referral').value,
+          notes:         document.getElementById('notes').value
+        })
+      });
+    } catch (err) {
+      console.error('Sheet error:', err);
+    }
+  }
+
+  function nextStep() {
+    collectStep(cur);
+    if (cur === TOTAL) {
+      showSummary();
+      submitToGoogleSheet(); // ← sends data to Google Sheet on final submit
+    }
+    cur++;
+    showStep(cur);
+  }
+  function prevStep() { if (cur > 1) { cur--; showStep(cur); } }
+
+  function collectStep(n) {
+    if (n === 1) { data.name = (document.getElementById('fname').value + ' ' + document.getElementById('lname').value).trim(); data.phone = document.getElementById('phone').value; data.email = document.getElementById('email').value; data.city = document.getElementById('city').value; }
+    if (n === 2) { data.propType = getChips('prop-type'); data.area = document.getElementById('area').value; data.bhk = document.getElementById('bhk').value; data.address = document.getElementById('address').value; }
+    if (n === 3) { data.rooms = getChips('rooms'); }
+    if (n === 4) { data.style = getChips('styles'); }
+    if (n === 5) { data.kitchenLayout = getChips('kitchen-layout'); data.cabinetFinish = getChips('cabinet-finish'); data.countertop = getChips('countertop'); data.appliances = getChips('appliances'); }
+    if (n === 6) { data.budget = budgetLabels[parseInt(document.getElementById('budget-slider').value) - 1]; data.payment = getChips('payment'); }
+    if (n === 7) { data.startWhen = getChips('start-when'); data.duration = getChips('duration'); data.startDate = document.getElementById('start-date').value; data.endDate = document.getElementById('end-date').value; }
+    if (n === 8) { data.flooring = getChips('flooring'); data.referral = document.getElementById('referral').value; data.notes = document.getElementById('notes').value; }
+  }
+
+  function getChips(id) { return [...document.querySelectorAll('#' + id + ' .chip.selected')].map(c => c.dataset.val).join(', '); }
+
+  function showSummary() {
+    const rows = [['Name', data.name], ['Phone', data.phone], ['Email', data.email], ['City', data.city], ['Property type', data.propType], ['Area', data.area ? data.area + ' sq ft' : ''], ['BHK', data.bhk], ['Rooms', data.rooms], ['Style', data.style], ['Kitchen layout', data.kitchenLayout], ['Budget', data.budget], ['Payment', data.payment], ['Start', data.startWhen], ['Duration', data.duration], ['Flooring', data.flooring], ['Referral', data.referral]];
+    document.getElementById('summary').innerHTML = rows.filter(r => r[1]).map(r => `<div class="summary-row"><span class="summary-label">${r[0]}</span><span class="summary-val">${r[1]}</span></div>`).join('');
+  }
+
+  function sendWhatsApp() {
+    const lines = ['🏠 *New Interior Design Enquiry*', '', `*Name:* ${data.name || '-'}`, `*Phone:* ${data.phone || '-'}`, `*Email:* ${data.email || '-'}`, `*City:* ${data.city || '-'}`, '', `*Property:* ${data.propType || '-'} | ${data.bhk || '-'} | ${data.area ? data.area + ' sq ft' : '-'}`, `*Address:* ${data.address || '-'}`, '', `*Rooms:* ${data.rooms || '-'}`, `*Style:* ${data.style || '-'}`, `*Kitchen layout:* ${data.kitchenLayout || '-'}`, `*Cabinet finish:* ${data.cabinetFinish || '-'}`, `*Countertop:* ${data.countertop || '-'}`, '', `*Budget:* ${data.budget || '-'}`, `*Payment:* ${data.payment || '-'}`, '', `*Start:* ${data.startWhen || '-'} | *Duration:* ${data.duration || '-'}`, data.startDate ? `*Start date:* ${data.startDate}` : '', data.endDate ? `*Deadline:* ${data.endDate}` : '', '', `*Flooring:* ${data.flooring || '-'}`, `*Referral:* ${data.referral || '-'}`, data.notes ? `*Notes:* ${data.notes}` : ''].filter(Boolean).join('\n');
+    window.open('https://wa.me/918883929313?text=' + encodeURIComponent(lines), '_blank');
+  }
+
+  function resetForm() { cur = 1; document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); document.querySelectorAll('input, select, textarea').forEach(el => el.value = ''); document.getElementById('budget-display').textContent = budgetLabels[3]; document.getElementById('budget-slider').value = 4; document.getElementById('nav-bar').style.display = 'flex'; showStep(1); }
+
+  document.querySelectorAll('.chips').forEach(group => {
+    const single = ['prop-type', 'styles', 'kitchen-layout', 'start-when', 'duration'].includes(group.id);
+    group.addEventListener('click', e => {
+      const chip = e.target.closest('.chip'); if (!chip) return;
+      if (single) { group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected')); chip.classList.add('selected'); }
+      else { chip.classList.toggle('selected'); }
+    });
+  });
+
+  document.getElementById('budget-slider').addEventListener('input', function() {
+    document.getElementById('budget-display').textContent = budgetLabels[parseInt(this.value) - 1];
+  });
+
+  showStep(1);
+</script>
+</body>
+</html>
